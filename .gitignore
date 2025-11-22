@@ -1,0 +1,74 @@
+## --- .NET / C# ---
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+*.db
+*.db-shm
+*.db-wal
+*.pdb
+*.cache/
+*.log
+
+## Global JSON
+global.json
+
+## --- Build results ---
+/[Dd]ebug/
+/[Rr]elease/
+/x64/
+/x86/
+/build/
+/[Bb]uild/
+/[Ll]ogs/
+
+## --- Visual Studio ---
+.vs/
+*.ncrunch*
+*.localhistory/
+*.vscode/
+
+## --- Testing ---
+TestResult.xml
+TestResults/
+*.trx
+*.coverage
+*.coverlet.json
+
+## --- ASP.NET Core ---
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+.env
+*.jwk
+
+## --- Blazor WebAssembly ---
+wwwroot/build/
+wwwroot/dist/
+*.pubxml
+*.publish.xml
+
+## --- Node / NPM (Blazor WASM usa NPM si hay Tailwind) ---
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnp.*
+.pnpm-store/
+
+## --- Rider / JetBrains ---
+.idea/
+
+## --- Mac / Linux ---
+.DS_Store
+*.swp
+*.swu
+ehthumbs.db
+Thumbs.db
+
+## --- Docker ---
+docker-compose.override.yml
+*.env
+docker-data/
