@@ -4,10 +4,13 @@ using ProductsOrders.Application.Common.Interfaces;
 using ProductsOrders.Application.Common.Interfaces.Repositories;
 using ProductsOrders.Application.Common.Settings;
 using ProductsOrders.Application.Services;
+using ProductsOrders.Domain.Strategies;
 using ProductsOrders.Infrastructure.Auth;
 using ProductsOrders.Infrastructure.Persistence;
 using ProductsOrders.Infrastructure.Persistence.Repositories;
 using ProductsOrders.Infrastructure.Persistence.Seed;
+using ProductsOrders.Infrastructure.Providers;
+using ProductsOrders.Infrastructure.Providers.Strategies;
 using ProductsOrders.Infrastructure.Security;
 using ProductsOrders.Infrastructure.Services;
 using System.Text;
@@ -21,6 +24,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
+builder.Services.AddScoped<IProviderStrategy, CazaPagosStrategy>();
+builder.Services.AddScoped<IProviderStrategy, PagoFacilStrategy>();
+
+builder.Services.AddScoped<IProviderSelector, ProviderSelector>();
 
 builder.Services.AddScoped<DbSeed>();
 
