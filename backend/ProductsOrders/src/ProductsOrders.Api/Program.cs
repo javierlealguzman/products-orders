@@ -4,8 +4,12 @@ using ProductsOrders.Application.Common.Interfaces;
 using ProductsOrders.Application.Common.Interfaces.Repositories;
 using ProductsOrders.Application.Common.Settings;
 using ProductsOrders.Application.Services;
+using ProductsOrders.Domain.Factories;
+using ProductsOrders.Domain.Payments;
 using ProductsOrders.Domain.Strategies;
 using ProductsOrders.Infrastructure.Auth;
+using ProductsOrders.Infrastructure.Factories;
+using ProductsOrders.Infrastructure.Payments;
 using ProductsOrders.Infrastructure.Persistence;
 using ProductsOrders.Infrastructure.Persistence.Repositories;
 using ProductsOrders.Infrastructure.Persistence.Seed;
@@ -29,6 +33,10 @@ builder.Services.AddScoped<IProviderStrategy, CazaPagosStrategy>();
 builder.Services.AddScoped<IProviderStrategy, PagoFacilStrategy>();
 
 builder.Services.AddScoped<IProviderSelector, ProviderSelector>();
+
+builder.Services.AddSingleton<IExternalPaymentClient, PagoFacilExternalPaymentClient>();
+builder.Services.AddSingleton<IExternalPaymentClient, CazaPagoExternalPaymentClient>();
+builder.Services.AddSingleton<IProviderFactory, ProviderFactory>();
 
 builder.Services.AddScoped<DbSeed>();
 
@@ -55,6 +63,21 @@ builder.Services.AddAuthentication().AddJwtBearer(options => {
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!))
     };
 });
+
+var providers = config.GetSection("Providers").GetChildren();
+var providersDictionary = providers.ToDictionary(x => x.Key, x => x.Get<ProviderSettings>());
+
+foreach (var provider in providersDictionary)
+{
+    builder.Services.AddHttpClient(provider.Key, client =>
+    {
+        client.BaseAddress = new Uri(provider.Value!.Url);
+        foreach (var header in provider.Value.Headers)
+        {
+            client.DefaultRequestHeaders.Add(header.Key, header.Value);
+        }
+    });
+}
 
 builder.Services.AddAuthorization();
 

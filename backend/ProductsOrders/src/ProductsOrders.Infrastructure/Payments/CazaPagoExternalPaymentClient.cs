@@ -1,0 +1,41 @@
+﻿using Newtonsoft.Json;
+using ProductsOrders.Domain.Payments;
+using ProductsOrders.Domain.Providers;
+using ProductsOrders.Infrastructure.DTOs;
+using System.Text;
+
+namespace ProductsOrders.Infrastructure.Payments;
+
+public class CazaPagoExternalPaymentClient(IHttpClientFactory httpFactory) : IExternalPaymentClient
+{
+    private readonly IHttpClientFactory _httpFactory = httpFactory;
+    public async Task<string> ProcessPaymentAsync(Domain.DTOs.OrderRequestDto orderRequest)
+    {
+        var client = _httpFactory.CreateClient(Provider.CazaPagos.Name);
+
+        var orderRequestDto = new DTOs.OrderRequestDto
+        {
+            Method = orderRequest.PaymentType.ToString(),
+            Products = orderRequest.Products.Select(x => new DTOs.ProductDto { 
+                Name = x.Name, 
+                UnitPrice = x.UnitPrice 
+            })
+        };
+
+        var bodyContent = JsonConvert.SerializeObject(orderRequestDto);
+
+        var stringContent = new StringContent(bodyContent, Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync("/Order", stringContent);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResponse = await response.Content.ReadAsStringAsync();
+
+        var order = JsonConvert.DeserializeObject<OrderResponseDto>(stringResponse);
+
+        return order is null 
+            ? throw new Exception("Unable to parse response from Caza Pago provider") 
+            : order.OrderId;
+    }
+}

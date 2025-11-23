@@ -1,11 +1,12 @@
 ﻿using ProductsOrders.Domain.Enums;
+using ProductsOrders.Domain.Providers;
 using ProductsOrders.Domain.Strategies;
 
 namespace ProductsOrders.Infrastructure.Providers.Strategies;
 
 public class PagoFacilStrategy : IProviderStrategy
 {
-    public string Name => "PagoFacil";
+    public string Name => Provider.PagoFacil.Name;
 
     public bool HasPaymentSupport(PaymentType paymentType)
     {
