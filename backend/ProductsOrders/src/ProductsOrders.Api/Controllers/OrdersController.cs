@@ -6,6 +6,7 @@ using ProductsOrders.Application.Services;
 
 namespace ProductsOrders.Api.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [Produces("application/json")]
 public class OrdersController(IPaymentOrderService orderService) : ControllerBase

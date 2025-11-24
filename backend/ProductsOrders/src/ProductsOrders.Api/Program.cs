@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ProductsOrders.Application.Common.Interfaces;
 using ProductsOrders.Application.Common.Interfaces.Repositories;
 using ProductsOrders.Application.Common.Settings;
@@ -46,13 +48,42 @@ builder.Services.Configure<JwtSettings>(config.GetSection("JwtSettings"));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c => 
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Api", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Enter JWT token with Bearer prefix",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new List<string>()
+        }
+    });
+});
 
 builder.Services.AddDbContext<ProductsOrdersContext>(options => {
     options.UseInMemoryDatabase("MyProdutsOrdersDatabase");
 });
 
-builder.Services.AddAuthentication().AddJwtBearer(options => {
+builder.Services.AddAuthentication("Bearer").AddJwtBearer(options => {
     options.TokenValidationParameters = new()
     {
         ValidateIssuer = true,
@@ -98,6 +129,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
