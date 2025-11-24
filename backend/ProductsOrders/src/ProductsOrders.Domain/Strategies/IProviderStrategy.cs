@@ -1,10 +1,11 @@
 ﻿using ProductsOrders.Domain.Enums;
+using ProductsOrders.Domain.Providers;
 
 namespace ProductsOrders.Domain.Strategies;
 
 public interface IProviderStrategy
 {
-    string Name { get; }
+    Provider Provider { get; }
     bool HasPaymentSupport(PaymentType paymentType);
     decimal CalculateCommission(PaymentType paymentType, decimal totalAmount);
 }

@@ -10,7 +10,7 @@ public class AuthController(IAuthService authService) : ControllerBase
 {
     private readonly IAuthService _authService = authService;
 
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var token = await _authService.LoginAsync(request.Username, request.Password);

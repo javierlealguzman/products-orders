@@ -6,7 +6,7 @@ namespace ProductsOrders.Infrastructure.Providers.Strategies;
 
 public class PagoFacilStrategy : IProviderStrategy
 {
-    public string Name => Provider.PagoFacil.Name;
+    public Provider Provider => Provider.PagoFacil;
 
     public bool HasPaymentSupport(PaymentType paymentType)
     {

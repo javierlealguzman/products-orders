@@ -6,7 +6,7 @@ namespace ProductsOrders.Infrastructure.Providers.Strategies;
 
 public class CazaPagosStrategy : IProviderStrategy
 {
-    public string Name => Provider.CazaPagos.Name;
+    public Provider Provider => Provider.CazaPagos;
 
     public bool HasPaymentSupport(PaymentType paymentType)
     {

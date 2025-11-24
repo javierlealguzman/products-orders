@@ -2,10 +2,10 @@
 
 namespace ProductsOrders.Infrastructure.DTOs;
 
-public class FeeDto
+public class PagoFacilFeeDto
 {
-    [JsonProperty("title")]
-    public string Title { get; set; } = string.Empty;
+    [JsonProperty("name")]
+    public string Name { get; set; } = string.Empty;
 
     [JsonProperty("amount")]
     public decimal Amount { get; set; }

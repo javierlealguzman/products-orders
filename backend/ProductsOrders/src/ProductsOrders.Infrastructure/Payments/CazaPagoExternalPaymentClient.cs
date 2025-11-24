@@ -32,7 +32,7 @@ public class CazaPagoExternalPaymentClient(IHttpClientFactory httpFactory) : IEx
 
         var stringResponse = await response.Content.ReadAsStringAsync();
 
-        var order = JsonConvert.DeserializeObject<OrderResponseDto>(stringResponse);
+        var order = JsonConvert.DeserializeObject<CazaPagoOrderResponseDto>(stringResponse);
 
         return order is null 
             ? throw new Exception("Unable to parse response from Caza Pago provider") 

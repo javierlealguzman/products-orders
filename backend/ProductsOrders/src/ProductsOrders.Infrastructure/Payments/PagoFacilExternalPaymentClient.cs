@@ -34,10 +34,10 @@ public class PagoFacilExternalPaymentClient(IHttpClientFactory httpFactory) : IE
 
         var stringResponse = await response.Content.ReadAsStringAsync();
 
-        var order = JsonConvert.DeserializeObject<OrderResponseDto>(stringResponse);
+        var order = JsonConvert.DeserializeObject<PagoFacilOrderResponseDto>(stringResponse);
 
         return order is null 
             ? throw new Exception("Unable to parse response from Pago Facil provider") 
-            : order.OrderId;
+            : order.OrderId.ToString();
     }
 }

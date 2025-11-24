@@ -2,7 +2,7 @@
 
 namespace ProductsOrders.Infrastructure.DTOs;
 
-public class OrderResponseDto
+public class CazaPagoOrderResponseDto
 {
     [JsonProperty("orderId")]
     public string OrderId { get; set; } = string.Empty;
@@ -17,10 +17,10 @@ public class OrderResponseDto
     public string Method { get; set; } = string.Empty;
 
     [JsonProperty("fees")]
-    public IEnumerable<FeeDto> Fees { get; set; } = [];
+    public IEnumerable<CazaPagoFeeDto> Fees { get; set; } = [];
 
     [JsonProperty("taxes")]
-    public IEnumerable<TaxDto>? Taxes { get; set; }
+    public IEnumerable<TaxDto> Taxes { get; set; } = [];
 
     [JsonProperty("products")]
     public IEnumerable<ProductDto> Products { get; set; } = [];
