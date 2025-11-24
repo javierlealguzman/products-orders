@@ -10,7 +10,7 @@ public class PagoFacilExternalPaymentClient(IHttpClientFactory httpFactory) : IE
 {
     private readonly IHttpClientFactory _httpFactory = httpFactory;
 
-    public async Task<string> ProcessPaymentAsync(Domain.DTOs.OrderRequestDto orderRequest)
+    public virtual async Task<string> ProcessPaymentAsync(Domain.DTOs.OrderRequestDto orderRequest)
     {
         var client = _httpFactory.CreateClient(Provider.PagoFacil.Name);
 

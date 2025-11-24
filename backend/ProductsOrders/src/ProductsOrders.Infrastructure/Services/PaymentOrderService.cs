@@ -39,6 +39,7 @@ public class PaymentOrderService(
 
         var paymentOrder = new PaymentOrder
         {
+            OrderId = orderId,
             PaymentMode = paymentOrderRequestDto.PaymentType.ToString(),
             Provider = provider.Provider.Name,
             PaymentDate = DateTime.UtcNow,
@@ -50,6 +51,7 @@ public class PaymentOrderService(
         var paymentOrderDto = new PaymentOrderDto
         {
             Id = paymentOrder.Id,
+            OrderId = paymentOrder.OrderId,
             PaymentMode = paymentOrder.PaymentMode,
             PaymentDate= paymentOrder.PaymentDate,
             TotalAmount = paymentOrder.TotalAmount,
