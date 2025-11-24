@@ -14,7 +14,7 @@ public class ProviderFactory(IEnumerable<IExternalPaymentClient> providers) : IP
         return provider.Name switch
         {
             "PagoFacil" => _providers.OfType<PagoFacilExternalPaymentClient>().First(),
-            "CazaPago" => _providers.OfType<CazaPagoExternalPaymentClient>().First(),
+            "CazaPagos" => _providers.OfType<CazaPagoExternalPaymentClient>().First(),
             _ => throw new ArgumentException("Provider not supported")
         };
     }
