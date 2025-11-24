@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ProductsOrders.Domain.Exceptions;
 using ProductsOrders.Domain.Payments;
 using ProductsOrders.Domain.Providers;
 using ProductsOrders.Infrastructure.DTOs;
@@ -9,33 +10,46 @@ namespace ProductsOrders.Infrastructure.Payments;
 public class CazaPagoExternalPaymentClient(IHttpClientFactory httpFactory) : IExternalPaymentClient
 {
     private readonly IHttpClientFactory _httpFactory = httpFactory;
+
     public virtual async Task<string> ProcessPaymentAsync(Domain.DTOs.OrderRequestDto orderRequest)
     {
-        var client = _httpFactory.CreateClient(Provider.CazaPagos.Name);
-
-        var orderRequestDto = new DTOs.OrderRequestDto
+        try
         {
-            Method = orderRequest.PaymentType.ToString(),
-            Products = orderRequest.Products.Select(x => new DTOs.ProductDto { 
-                Name = x.Name, 
-                UnitPrice = x.UnitPrice 
-            })
-        };
+            var client = _httpFactory.CreateClient(Provider.CazaPagos.Name);
 
-        var bodyContent = JsonConvert.SerializeObject(orderRequestDto);
+            var orderRequestDto = new DTOs.OrderRequestDto
+            {
+                Method = orderRequest.PaymentType.ToString(),
+                Products = orderRequest.Products.Select(x => new DTOs.ProductDto
+                {
+                    Name = x.Name,
+                    UnitPrice = x.UnitPrice
+                })
+            };
 
-        var stringContent = new StringContent(bodyContent, Encoding.UTF8, "application/json");
+            var bodyContent = JsonConvert.SerializeObject(orderRequestDto);
 
-        var response = await client.PostAsync("/Order", stringContent);
+            var stringContent = new StringContent(bodyContent, Encoding.UTF8, "application/json");
 
-        response.EnsureSuccessStatusCode();
+            var response = await client.PostAsync("/Order", stringContent);
 
-        var stringResponse = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
 
-        var order = JsonConvert.DeserializeObject<CazaPagoOrderResponseDto>(stringResponse);
+            var stringResponse = await response.Content.ReadAsStringAsync();
 
-        return order is null 
-            ? throw new Exception("Unable to parse response from Caza Pago provider") 
-            : order.OrderId;
+            var order = JsonConvert.DeserializeObject<CazaPagoOrderResponseDto>(stringResponse);
+
+            return order is null
+                ? throw new ExternalProviderException("Unable to parse response from Caza Pago provider")
+                : order.OrderId;
+        }
+        catch (HttpRequestException)
+        {
+            throw new ExternalProviderException("Something happened while trying to create order with caza pago provider");
+        }
+        catch (JsonException) 
+        {
+            throw new ExternalProviderException("Something happened while parsing response");
+        }
     }
 }

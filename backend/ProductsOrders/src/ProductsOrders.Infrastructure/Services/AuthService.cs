@@ -1,6 +1,7 @@
 ﻿using ProductsOrders.Application.Common.Interfaces;
 using ProductsOrders.Application.Common.Interfaces.Repositories;
 using ProductsOrders.Application.Services;
+using ProductsOrders.Domain.Exceptions;
 
 namespace ProductsOrders.Infrastructure.Services;
 
@@ -16,10 +17,10 @@ public class AuthService(
     public async Task<string> LoginAsync(string username, string password)
     {
         var user = await _userRepository.GetByUsernameAsync(username) 
-            ?? throw new Exception("User not found");
+            ?? throw new NotFoundException("User not found");
 
         if (!_hasher.Verify(password, user.PasswordHash)) 
-            throw new Exception("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
 
         return _jwtProvider.GenerateToken(user.Id, user.Username, user.Role);
     }

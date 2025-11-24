@@ -1,4 +1,5 @@
-﻿using ProductsOrders.Domain.Factories;
+﻿using ProductsOrders.Domain.Exceptions;
+using ProductsOrders.Domain.Factories;
 using ProductsOrders.Domain.Payments;
 using ProductsOrders.Domain.Providers;
 using ProductsOrders.Infrastructure.Payments;
@@ -15,7 +16,7 @@ public class ProviderFactory(IEnumerable<IExternalPaymentClient> providers) : IP
         {
             "PagoFacil" => _providers.OfType<PagoFacilExternalPaymentClient>().First(),
             "CazaPagos" => _providers.OfType<CazaPagoExternalPaymentClient>().First(),
-            _ => throw new ArgumentException("Provider not supported")
+            _ => throw new ProviderNotSupported("Provider not supported")
         };
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProductsOrders.Api.Middlewares;
 using ProductsOrders.Application.Common.Interfaces;
 using ProductsOrders.Application.Common.Interfaces.Repositories;
 using ProductsOrders.Application.Common.Settings;
@@ -115,6 +116,8 @@ foreach (var provider in providersDictionary)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalErrorHandlerMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
