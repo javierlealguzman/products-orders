@@ -36,4 +36,28 @@ public class OrdersController(IPaymentOrderService orderService) : ControllerBas
 
         return Ok(paymentOrders);
     }
+
+    [HttpGet("Get/{id}")]
+    public async Task<ActionResult<PaymentOrderDto>> Get(int id)
+    {
+        var paymentOrder = await _orderService.GetAsync(id);
+
+        return Ok(paymentOrder);
+    }
+
+    [HttpPut("Cancel/{id}")]
+    public async Task<IActionResult> Cancel(int id)
+    {
+        await _orderService.CancelAsync(id);
+
+        return NoContent();
+    }
+
+    [HttpPut("Pay/{id}")]
+    public async Task<IActionResult> Pay(int id)
+    {
+        await _orderService.PayAsync(id);
+
+        return NoContent();
+    }
 }

@@ -11,4 +11,14 @@ public sealed class Provider
     public static readonly Provider CazaPagos = new("CazaPagos");
 
     public override string ToString() => Name;
+
+    public static Provider FromString(string providerName)
+    {
+        return providerName switch
+        {
+            "PagoFacil" => PagoFacil,
+            "CazaPagos" => CazaPagos,
+            _ => throw new NotSupportedException("Provider not supported")
+        };
+    }
 }

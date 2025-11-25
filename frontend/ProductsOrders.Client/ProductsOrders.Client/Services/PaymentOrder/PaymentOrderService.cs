@@ -56,4 +56,73 @@ public class PaymentOrderService(HttpClient httpClient, ILocalStorageService loc
             throw;
         }
     }
+
+    public async Task<PaymentOrderDto> GetAsync(int id)
+    {
+        try
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var paymentOrderDto = await _http.GetFromJsonAsync<PaymentOrderDto>($"api/Orders/Get/{id}");
+
+            return paymentOrderDto!;
+        }
+        catch (HttpRequestException)
+        {
+            throw new Exception("Unable to retrieve order");
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public async Task<bool> CancelAsync(int id)
+    {
+        try
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.PutAsync($"api/Orders/Cancel/{id}", null);
+
+            return response.IsSuccessStatusCode;
+        }
+        catch (HttpRequestException)
+        {
+            throw new Exception("Unable to cancel order");
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public async Task<bool> PayAsync(int id)
+    {
+        try
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _http.PutAsync($"api/Orders/Pay/{id}", null);
+
+            return response.IsSuccessStatusCode;
+        }
+        catch (HttpRequestException)
+        {
+            throw new Exception("Unable to pay order");
+        }
+        catch
+        {
+            throw;
+        }
+    }
 }

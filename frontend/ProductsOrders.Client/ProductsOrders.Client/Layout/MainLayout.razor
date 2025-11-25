@@ -25,7 +25,7 @@
                                  Label="Sign Out" />
                 </MudMenu>
             </MudAppBar>
-            <MudDrawer @bind-Open="_drawerOpen" Elevation="0">
+            <MudDrawer @bind-Open="_drawerOpen" Elevation="0" Anchor="Anchor.Start" Variant="@DrawerVariant.Persistent">
                 <MudDrawerHeader>
                     <MudText Typo="Typo.h5" Class="mt-1">Products Api</MudText>
                 </MudDrawerHeader>

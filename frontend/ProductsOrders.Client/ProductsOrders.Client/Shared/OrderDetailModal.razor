@@ -1,0 +1,29 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudCard>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xs="4"><b>Order Id:</b></MudItem>
+                    <MudItem xs="8">@PaymentOrder.OrderId</MudItem>
+
+                    <MudItem xs="4"><b>Provider:</b></MudItem>
+                    <MudItem xs="8">@PaymentOrder.Provider</MudItem>
+
+                    <MudItem xs="4"><b>Total Amount:</b></MudItem>
+                    <MudItem xs="8">@PaymentOrder.TotalAmount.ToString("C")</MudItem>
+
+                    <MudItem xs="4"><b>Status:</b></MudItem>
+                    <MudItem xs="8">
+                        <MudChip T="string" Variant="Variant.Filled" Color="GetOrderStatusColor(PaymentOrder.Status)">@PaymentOrder.Status</MudChip>
+                    </MudItem>
+
+                    <MudItem xs="4"><b>Payment Mode:</b></MudItem>
+                    <MudItem xs="8">@PaymentOrder.PaymentMode</MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Close" Class="mr-1">Close</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -3,26 +3,35 @@
 <MudPaper Class="pa-6 mx-auto mt-12" Style="max-width:400px;">
     <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
 
-    <MudTextField 
-        @bind-Value="Username"
-        Label="Username" 
-        Variant="Variant.Outlined" 
-        FullWidth="true" />
+    <MudForm Model="LoginRequest" @ref="Form">
+        <MudTextField 
+            @bind-Value="LoginRequest.Username"
+            Label="Username"
+            Required="true"
+            RequiredError="This field is required"
+            Variant="Variant.Outlined"
+            For="(() => LoginRequest.Username)"
+            FullWidth="true" />
 
-    <MudTextField 
-        @bind-Value="Password" 
-        Label="Password" 
-        Variant="Variant.Outlined" 
-        InputType="InputType.Password" 
-        FullWidth="true" />
+        <MudTextField 
+            @bind-Value="LoginRequest.Password"
+            Label="Password"
+            Required="true"
+            RequiredError="This field is required"
+            Variant="Variant.Outlined"
+            InputType="InputType.Password"
+            For="(() => LoginRequest.Password)"
+            FullWidth="true" />
 
-    <MudButton 
-        OnClick="LoginAction" 
-        Variant="Variant.Filled" 
-        Color="Color.Primary" 
-        Class="mt-4" 
-        FullWidth="true">Login
-    </MudButton>
+        <MudButton 
+            OnClick="LoginAction"
+            Variant="Variant.Filled"
+            Color="Color.Primary"
+            Class="mt-4"
+            FullWidth="true">
+            Login
+        </MudButton>
+    </MudForm>
 
     @if (!string.IsNullOrEmpty(errorMessage))
     {

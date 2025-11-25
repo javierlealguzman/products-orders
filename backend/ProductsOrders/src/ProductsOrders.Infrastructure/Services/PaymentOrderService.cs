@@ -4,6 +4,7 @@ using ProductsOrders.Application.Services;
 using ProductsOrders.Domain.DTOs;
 using ProductsOrders.Domain.Entities;
 using ProductsOrders.Domain.Factories;
+using ProductsOrders.Domain.Providers;
 using ProductsOrders.Domain.Strategies;
 
 namespace ProductsOrders.Infrastructure.Services;
@@ -17,6 +18,21 @@ public class PaymentOrderService(
     private readonly IProviderSelector _providerSelector = providerSelector;
     private readonly IProviderFactory _providerFactory = providerFactory;
     private readonly IPaymentOrderRepository _paymentOrderRepository = paymentOrderRepository;
+
+    public async Task<bool> CancelAsync(int id)
+    {
+        var paymentOrder = await _paymentOrderRepository.GetAsync(id);
+
+        var provider = Provider.FromString(paymentOrder.Provider);
+
+        var httpProvider = _providerFactory.GetProvider(provider);
+
+        await httpProvider.CancelOrderAsync(paymentOrder.OrderId);
+
+        await _paymentOrderRepository.UpdateAsync(paymentOrder.Id, "Cancelled");
+
+        return true;
+    }
 
     public async Task<PaymentOrderDto> CreateAsync(PaymentOrderRequestDto paymentOrderRequestDto)
     {
@@ -43,7 +59,8 @@ public class PaymentOrderService(
             PaymentMode = paymentOrderRequestDto.PaymentType.ToString(),
             Provider = provider.Provider.Name,
             PaymentDate = DateTime.UtcNow,
-            TotalAmount = totalAmount
+            TotalAmount = totalAmount,
+            Status = "Pending"
         };
 
         await _paymentOrderRepository.CreateAsync(paymentOrder);
@@ -55,7 +72,8 @@ public class PaymentOrderService(
             PaymentMode = paymentOrder.PaymentMode,
             PaymentDate= paymentOrder.PaymentDate,
             TotalAmount = paymentOrder.TotalAmount,
-            Provider = paymentOrder.Provider
+            Provider = paymentOrder.Provider,
+            Status = paymentOrder.Status
         };
 
         return paymentOrderDto;
@@ -72,9 +90,43 @@ public class PaymentOrderService(
             PaymentMode = x.PaymentMode,
             PaymentDate = x.PaymentDate,
             TotalAmount = x.TotalAmount,
-            Provider = x.Provider
+            Provider = x.Provider,
+            Status = x.Status
         });
 
         return paymentOrdersDto;
+    }
+
+    public async Task<PaymentOrderDto> GetAsync(int id)
+    {
+        var paymentOrder = await _paymentOrderRepository.GetAsync(id);
+
+        var paymentOrderDto = new PaymentOrderDto
+        {
+            Id = paymentOrder.Id,
+            OrderId = paymentOrder.OrderId,
+            PaymentMode = paymentOrder.PaymentMode,
+            Provider = paymentOrder.Provider,
+            PaymentDate = paymentOrder.PaymentDate,
+            TotalAmount = paymentOrder.TotalAmount,
+            Status = paymentOrder.Status
+        };
+
+        return paymentOrderDto;
+    }
+
+    public async Task<bool> PayAsync(int id)
+    {
+        var paymentOrder = await _paymentOrderRepository.GetAsync(id);
+
+        var provider = Provider.FromString(paymentOrder.Provider);
+
+        var httpProvider = _providerFactory.GetProvider(provider);
+
+        await httpProvider.PayOrderAsync(paymentOrder.OrderId);
+
+        await _paymentOrderRepository.UpdateAsync(paymentOrder.Id, "Completed");
+
+        return true;
     }
 }

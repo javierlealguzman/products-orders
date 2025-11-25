@@ -12,18 +12,32 @@
     <HeaderContent>
         <MudTh>Id</MudTh>
         <MudTh>Order Id</MudTh>
+        <MudTh>Status</MudTh>
         <MudTh>Payment Mode</MudTh>
         <MudTh>Provider</MudTh>
         <MudTh>Total Amount</MudTh>
         <MudTh>Date</MudTh>
+        <MudTh>Actions</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
+        <MudTd DataLabel="Order Id">
+            <MudLink OnClick="(() => OpenOrderDetailModal(context.Id))">@context.OrderId</MudLink>
+        </MudTd>
+        <MudTd DataLabel="Status">
+            <MudChip T="string" Variant="Variant.Filled" Color="GetOrderStatusColor(context.Status)">@context.Status</MudChip>
+        </MudTd>
         <MudTd DataLabel="Payment Mode">@context.PaymentMode</MudTd>
         <MudTd DataLabel="Provider">@context.Provider</MudTd>
         <MudTd DataLabel="Total Amount">@context.TotalAmount.ToString("C")</MudTd>
         <MudTd DataLabel="Payment Date">@context.PaymentDate</MudTd>
+        <MudTd>
+            @if (context.Status == "Pending")
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="(() => PayOrder(context.Id))">Pay</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="(() => CancelOrder(context.Id))">Cancel</MudButton>
+            }
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         No data found
