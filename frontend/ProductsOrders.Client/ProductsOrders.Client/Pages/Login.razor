@@ -1,0 +1,31 @@
+﻿@page "/login"
+
+<MudPaper Class="pa-6 mx-auto mt-12" Style="max-width:400px;">
+    <MudText Typo="Typo.h5" Class="mb-4">Login</MudText>
+
+    <MudTextField 
+        @bind-Value="Username"
+        Label="Username" 
+        Variant="Variant.Outlined" 
+        FullWidth="true" />
+
+    <MudTextField 
+        @bind-Value="Password" 
+        Label="Password" 
+        Variant="Variant.Outlined" 
+        InputType="InputType.Password" 
+        FullWidth="true" />
+
+    <MudButton 
+        OnClick="LoginAction" 
+        Variant="Variant.Filled" 
+        Color="Color.Primary" 
+        Class="mt-4" 
+        FullWidth="true">Login
+    </MudButton>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <MudText Color="Color.Error" Class="mt-2">@errorMessage</MudText>
+    }
+</MudPaper>

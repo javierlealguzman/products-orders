@@ -48,6 +48,16 @@ builder.Services.AddScoped<DbSeed>();
 
 builder.Services.Configure<JwtSettings>(config.GetSection("JwtSettings"));
 
+builder.Services.AddCors(options => 
+{
+    options.AddPolicy("AllowBlazorClient", policy => {
+        policy.WithOrigins("https://localhost:7089")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -133,6 +143,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowBlazorClient");
 
 app.UseAuthentication();
 

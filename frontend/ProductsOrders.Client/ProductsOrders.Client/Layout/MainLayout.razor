@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using ProductsOrders.Client.Services.Auth
+@inherits LayoutComponentBase
+@inject AuthService authService
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -6,27 +8,50 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h5" Class="mt-1">Products Api</MudText>
-        </MudDrawerHeader>
-        <NavMenu />
-    </MudDrawer>
-    <MudMainContent>
+    <AuthorizeView>
+        <Authorized>
+            <MudAppBar Elevation="1">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                <MudSpacer />
+                <MudMenu Dense
+                         Variant="Variant.Text"
+                         Size="Size.Medium"
+                         Color="Color.Inherit"
+                         Icon="@Icons.Material.TwoTone.MoreVert">
+
+                    <MudMenuItem OnClick="LogOut"
+                                 Icon="@Icons.Material.TwoTone.Logout"
+                                 IconColor="Color.Primary"
+                                 Label="Sign Out" />
+                </MudMenu>
+            </MudAppBar>
+            <MudDrawer @bind-Open="_drawerOpen" Elevation="0">
+                <MudDrawerHeader>
+                    <MudText Typo="Typo.h5" Class="mt-1">Products Api</MudText>
+                </MudDrawerHeader>
+                <NavMenu />
+            </MudDrawer>
+        </Authorized>
+        <NotAuthorized>
+
+        </NotAuthorized>
+    </AuthorizeView>
+    
+    <MudMainContent Class="m-4">
         @Body
     </MudMainContent>
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
+    bool _drawerOpen = false;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    async Task LogOut()
+    {
+        await authService.LogoutAsync();
     }
 }
