@@ -1,0 +1,31 @@
+﻿@page "/orders"
+@attribute [Authorize]
+
+<h3>Payment Orders</h3>
+
+<MudTable 
+    Items="PaymentOrders"
+    Hover="true"
+    Breakpoint="Breakpoint.Sm"
+    Loading="@Loading"
+    LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Order Id</MudTh>
+        <MudTh>Payment Mode</MudTh>
+        <MudTh>Provider</MudTh>
+        <MudTh>Total Amount</MudTh>
+        <MudTh>Date</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Order Id">@context.OrderId</MudTd>
+        <MudTd DataLabel="Payment Mode">@context.PaymentMode</MudTd>
+        <MudTd DataLabel="Provider">@context.Provider</MudTd>
+        <MudTd DataLabel="Total Amount">@context.TotalAmount.ToString("C")</MudTd>
+        <MudTd DataLabel="Payment Date">@context.PaymentDate</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        No data found
+    </NoRecordsContent>
+</MudTable>

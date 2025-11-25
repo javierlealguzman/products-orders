@@ -60,4 +60,21 @@ public class PaymentOrderService(
 
         return paymentOrderDto;
     }
+
+    public async Task<IEnumerable<PaymentOrderDto>> GetAsync()
+    {
+        var paymentOrders = await _paymentOrderRepository.GetAsync();
+
+        var paymentOrdersDto = paymentOrders.Select(x => new PaymentOrderDto 
+        {
+            Id = x.Id,
+            OrderId = x.OrderId,
+            PaymentMode = x.PaymentMode,
+            PaymentDate = x.PaymentDate,
+            TotalAmount = x.TotalAmount,
+            Provider = x.Provider
+        });
+
+        return paymentOrdersDto;
+    }
 }

@@ -28,4 +28,12 @@ public class OrdersController(IPaymentOrderService orderService) : ControllerBas
 
         return StatusCode(StatusCodes.Status201Created, paymentOrderDto);
     }
+
+    [HttpGet("Get")]
+    public async Task<ActionResult<IEnumerable<PaymentOrderDto>>> Get()
+    {
+        var paymentOrders = await _orderService.GetAsync();
+
+        return Ok(paymentOrders);
+    }
 }

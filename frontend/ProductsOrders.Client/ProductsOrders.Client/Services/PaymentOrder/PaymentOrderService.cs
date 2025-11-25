@@ -33,4 +33,27 @@ public class PaymentOrderService(HttpClient httpClient, ILocalStorageService loc
             throw;
         }
     }
+
+    public async Task<List<PaymentOrderDto>> GetAsync()
+    {
+        try
+        {
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            _http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var paymentOrdersDto = await _http.GetFromJsonAsync<List<PaymentOrderDto>>("api/Orders/Get");
+
+            return paymentOrdersDto ?? [];
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new Exception("Unable to connect to api server", ex);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }
