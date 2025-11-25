@@ -1,3 +1,51 @@
 ﻿@page "/products"
+@attribute [Authorize]
 
-<h3>Products</h3>
+
+
+<div class="d-flex justify-content-between align-content-center mb-3">
+    <div class="title">
+        <h3>Products</h3>
+    </div>
+    <div class="header-action">
+        <MudButton 
+            Color="Color.Primary"
+            OnClick="OpenPaymentTypeModal"
+            Variant="Variant.Filled"
+            EndIcon="@Icons.Material.Filled.Add">
+            Create Order</MudButton>
+    </div>
+</div>
+
+<MudTable 
+    Items="ProductsList" 
+    MultiSelection="true"
+    @bind-SelectedItems="SelectedProducts"
+    Hover="true" 
+    Breakpoint="Breakpoint.Sm" 
+    Loading="@Loading" 
+    LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Details</MudTh>
+        <MudTh>Is Available</MudTh>
+        <MudTh>Unit Price</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Details">@context.Details</MudTd>
+        <MudTd DataLabel="Is Available">
+            @if(context.IsAvailable)
+            {
+                <MudChip T="string" Color="Color.Success">Available</MudChip>
+            }
+            else
+            {
+                <MudChip T="string" Color="Color.Error">Not Available</MudChip>
+            }
+        </MudTd>
+        <MudTd DataLabel="Unit Price">@context.UnitPrice.ToString("C")</MudTd>
+    </RowTemplate>
+</MudTable>

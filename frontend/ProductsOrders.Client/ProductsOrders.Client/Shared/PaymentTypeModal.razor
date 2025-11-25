@@ -1,0 +1,14 @@
+﻿@using ProductsOrders.Client.Models.Enums
+<MudDialog>
+    <DialogContent>
+        <MudRadioGroup T="PaymentType" @bind-Value="SelectedOption">
+            <MudRadio Value="PaymentType.Cash" Color="Color.Primary">Cash</MudRadio>
+            <MudRadio Value="PaymentType.CreditCard" Color="Color.Primary">Credit Card</MudRadio>
+            <MudRadio Value="PaymentType.Transfer" Color="Color.Primary">Transfer</MudRadio>
+        </MudRadioGroup>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Cancel" Class="mr-1">Cancel</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Create">Create</MudButton>
+    </DialogActions>
+</MudDialog>
