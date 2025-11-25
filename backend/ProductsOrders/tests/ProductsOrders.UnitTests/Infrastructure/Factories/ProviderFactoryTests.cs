@@ -1,4 +1,5 @@
-﻿using ProductsOrders.Domain.Providers;
+﻿using ProductsOrders.Domain.Exceptions;
+using ProductsOrders.Domain.Providers;
 using ProductsOrders.Infrastructure.Payments;
 using System.Reflection;
 
@@ -27,7 +28,7 @@ public class ProviderFactoryTests(ProviderFactoryFixture fixture) : IClassFixtur
             culture: null
         );
 
-        Assert.Throws<ArgumentException>(() => _fixture.ServiceUnderTest.GetProvider(unsupportedProvider!));
+        Assert.Throws<ProviderNotSupported>(() => _fixture.ServiceUnderTest.GetProvider(unsupportedProvider!));
     }
 
     public static IEnumerable<object[]> SupportedProviders =
